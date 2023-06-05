@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Generates a list of primes using the Sieve of Eratosthenes
+ * Generates a list of primes using the segmented Sieve of Eratosthenes algorithm
  * optimized for large startingValue and endingValue
  */
-public class Sieve2PrimeNumberGenerator implements PrimeNumberGenerator {
+public class SegmentedSievePrimeNumberGenerator implements PrimeNumberGenerator {
     private static final boolean[] SIEVE = {
         false, false, true, true, false, true, false, true, false, false, false,
         true, false, true, false, false, false, true, false, true, false, false,

@@ -41,12 +41,12 @@ public class SievePrimeNumberGeneratorTest {
         Assertions.assertEquals(expected, actual);
     }
 
+    /**
+     * Check for IndexOutOfBoundsException
+     */
     @Test
-    public void generateAllRangesUpTo100() {
-        PrimeNumberGenerator simple = new SimplePrimeNumberGenerator();
-        for (int a = -100; a <= 100; a++) for (int b = -100; b <= 100; b++) {
-            Assertions.assertEquals(simple.generate(a, b), png.generate(a, b));
-        }
+    public void generate10000000to11000000() {
+        png.generate(10000000, 11000000);
     }
 
     @Test

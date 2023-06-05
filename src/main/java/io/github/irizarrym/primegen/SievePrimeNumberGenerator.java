@@ -14,8 +14,31 @@ public class SievePrimeNumberGenerator implements PrimeNumberGenerator {
         if (startingValue < 0) startingValue = 0;
         if (endingValue < 2) return new ArrayList<>();
 
+        boolean[] sieve = generateSieve(endingValue + 1);
+
+        // Collect prime numbers into list
+        List<Integer> primes = new ArrayList<>();
+        for (int i = startingValue; i <= endingValue; i++) {
+            if (sieve[i]) primes.add(i);
+        }
+
+        return primes;
+    }
+
+    public boolean[] generateSieve(int size) {
+        switch (size) {
+            case 0:
+                return new boolean[]{false};
+            case 1:
+                return new boolean[]{false, false};
+            case 2:
+                return new boolean[]{false, false, true};
+            default:
+                break;
+        }
+
         // This is the array for the sieve
-        boolean[] isPrime = new boolean[endingValue + 1];
+        boolean[] isPrime = new boolean[size];
         Arrays.fill(isPrime, true);
 
         // Preset first few values
@@ -23,25 +46,17 @@ public class SievePrimeNumberGenerator implements PrimeNumberGenerator {
         isPrime[1] = false;
         isPrime[2] = true;
 
-        // Only need to run up to square root of upper bound
-        final int ceilSqrt = (int) Math.ceil(Math.sqrt(endingValue));
+        final int ceilSqrt = (int) Math.ceil(Math.sqrt(size));
 
-        // Mark all composite values
-        for (int p = 2; p <= ceilSqrt; p++) {
-            // skip composite values
-            if (!isPrime[p]) continue;
-            for (int i = p + p; i <= endingValue; i += p) {
+        // Mark composite values as false
+        for (int p = 2; p < ceilSqrt; p++) {
+            if (!isPrime[p]) continue; // skip non-prime numbers
+            for (int i = p * p; i < isPrime.length; i += p) {
                 isPrime[i] = false;
             }
         }
 
-        // Collect prime numbers into list
-        List<Integer> primes = new ArrayList<>();
-        for (int i = startingValue; i <= endingValue; i++) {
-            if (isPrime[i]) primes.add(i);
-        }
-
-        return primes;
+        return isPrime;
     }
 
     @Override

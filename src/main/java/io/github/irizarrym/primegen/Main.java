@@ -11,11 +11,26 @@ public class Main {
         }
 
         // Parse command line options
-        boolean useSieve = false;
+        int sieveMode = 0;
+        int benchmarkMode = 0;
+        int noPrintMode = 0;
+        int countMode = 0;
         for (String arg : args) {
             if (arg.startsWith("--")) switch (arg) {
                 case "--sieve":
-                    useSieve = true;
+                    sieveMode = 1;
+                    break;
+                case "--sieve2":
+                    sieveMode = 2;
+                    break;
+                case "--time":
+                    benchmarkMode = 1;
+                    break;
+                case "--noprint":
+                    noPrintMode = 1;
+                    break;
+                case "--count":
+                    countMode = 1;
                     break;
                 case "--help":
                     printHelp();
@@ -47,12 +62,24 @@ public class Main {
         }
 
         PrimeNumberGenerator png;
-        if (useSieve) png = new SievePrimeNumberGenerator();
+        if (sieveMode == 1) png = new SievePrimeNumberGenerator();
+        else if (sieveMode == 2) png = new SegmentedSievePrimeNumberGenerator();
         else png = new SimplePrimeNumberGenerator();
 
+        final long startTime = System.currentTimeMillis();
         List<Integer> primes = png.generate(bounds.get(0), bounds.get(1));
-        for (int p : primes) {
+        final long endTime = System.currentTimeMillis();
+
+        if (noPrintMode == 0) for (int p : primes) {
             System.out.println(p);
+        }
+
+        if (countMode == 1) {
+            System.out.println(primes.size() + " prime numbers");
+        }
+
+        if (benchmarkMode == 1) {
+            System.out.println((endTime - startTime) + "ms");
         }
     }
 
@@ -63,10 +90,15 @@ public class Main {
         "Examples:",
         "  java -jar primegen.jar 0 100",
         "  java -jar primegen.jar --sieve 100 200",
+        "  java -jar ./target/primegen-1.0.0.jar --noprint --time --sieve2 2000000000 2100000000",
         "",
         "Options:",
-        " --sieve   Use Sieve of Eratosthenes algorithm",
-        " --help    Print this help text"
+        "  --sieve       Use Sieve of Eratosthenes algorithm",
+        "  --sieve2      Use segmented Sieve of Eratosthenes optimized for large LOWER and UPPER bounds",
+        "  --count       Print how many prime numbers were generated",
+        "  --time        Print time it took to generate primes in milliseconds",
+        "  --noprint     Do not print prime numbers",
+        "  --help        Print this help text"
     };
 
     public static void printHelp() {
